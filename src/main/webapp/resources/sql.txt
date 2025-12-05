@@ -1,0 +1,32 @@
+database : springdb
+username : springuser
+password : mysql
+
+-- DB 생성
+CREATE DATABASE springdb;
+
+
+-- user
+USE mysql;
+CREATE USER 'springuser'@'localhost' IDENTIFIED BY 'mysql';
+
+GRANT ALL PRIVILEGES ON springdb.* TO 'springuser'@'localhost';
+FLUSH PRIVILEGES;
+
+
+-- springuser접속
+USE springdb;
+
+
+-- 테이블 생성
+CREATE TABLE board(
+	bno BIGINT NOT NULL AUTO_INCREMENT,
+	title VARCHAR(200) NOT NULL,
+	writer VARCHAR(200) NOT NULL,
+	content TEXT,
+	is_del VARCHAR(5) DEFAULT 'N',
+	reg_date DATETIME DEFAULT now(),
+	read_count INT DEFAULT 0,
+	
+	PRIMARY KEY(bno)
+);

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.koreait.www.repository.UserDAO">
+	<insert id="insert">
+		INSERT INTO user(email, pwd, nick_name) VALUES(#{email}, #{pwd}, #{nickName})
+	</insert>
+	
+	<!-- 회원가입 후 권한 생성 -->
+	<insert id="insertAuth">
+		INSERT INTO auth(email, auth) VALUES(#{email}, 'ROLE_USER')
+	</insert>
+	
+	<select id="getUser" resultType="com.koreait.www.domain.UserVO">
+		SELECT * FROM user WHERE email=#{username}
+	</select>
+	
+	<select id="getAuthList" resultType="com.koreait.www.domain.AuthVO">
+		SELECT * FROM auth WHERE email=#{username}
+	</select>
+
+	<select id="getList" resultType="com.koreait.www.domain.UserVO">
+		SELECT * FROM user ORDER BY reg_date DESC
+	</select>
+	
+	<update id="updateLastLogin">
+		UPDATE user SET last_login=NOW() WHERE email=#{authEmail}
+	</update>
+	
+	<update id="modifyPwdEmpty">
+		UPDATE user SET nick_name=#{nickName} WHERE email=#{email}
+	</update>
+	
+	<update id="modify">
+		UPDATE user SET nick_name=#{nickName}, pwd=#{pwd} WHERE email=#{email}	
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM user WHERE email=#{email}
+	</delete>
+	
+	<delete id="authDelete">
+		DELETE FROM auth WHERE email=#{email}
+	</delete>
+</mapper>

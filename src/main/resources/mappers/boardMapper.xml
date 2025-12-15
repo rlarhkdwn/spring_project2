@@ -5,7 +5,81 @@
   
 <mapper namespace="com.koreait.www.repository.BoardDAO">
 <!-- namespace = dao interface의 이름 id = 메서드명 -->
-	<insert id="insert" parameterType="com.koreait.www.domain.BoardVO">
+	<insert id="insert">
 		INSERT INTO board(title, writer, content) VALUES(#{title}, #{writer}, #{content})
 	</insert>
+	
+	<select id="getList" resultType="com.koreait.www.domain.BoardVO">
+		<!-- SELECT * FROM board WHERE is_del='N' ORDER BY bno DESC LIMIT #{pageStart}, #{qty} -->
+		SELECT a.bno, b.title, b.writer, b.reg_date, b.read_count, b.cmt_qty, b.file_qty
+		FROM (
+			SELECT bno FROM board WHERE is_del='N'
+			<include refid="search"></include>
+			ORDER BY bno DESC
+			LIMIT #{pageStart}, #{qty}
+		) a LEFT JOIN board b ON a.bno = b.bno
+	</select>
+	
+	<select id="getDetail" resultType="com.koreait.www.domain.BoardVO">
+		SELECT * FROM board WHERE is_del='N' AND bno=#{bno}
+	</select>
+		
+	<select id="getTotalCount" resultType="int">
+		SELECT count(bno) FROM board WHERE is_del='N'
+		<include refid="search"></include>
+	</select>
+	
+	<select id="getBno" resultType="long">
+		SELECT max(bno) FROM board 
+	</select>
+	
+	<update id="update">
+		UPDATE board SET title=#{title}, content=#{content}, reg_date=now() WHERE bno=#{bno}
+	</update>
+
+	<update id="updateReadCount">
+		UPDATE board SET read_count=read_count+#{i} WHERE bno=#{bno}
+	</update>
+	
+	<update id="updateCmtQty">
+		UPDATE board SET cmt_qty=cmt_qty+#{i} WHERE bno=#{bno}
+	</update>
+	
+	<update id="updateFileQty">
+		UPDATE board SET file_qty=file_qty+#{i} WHERE bno=#{bno}
+	</update>
+	
+	<delete id="delete">
+		UPDATE board SET is_del='Y' WHERE bno=#{bno}
+	</delete>
+	
+	
+	<!--
+		SELECT * FROM board WHERE is_del='N'
+		SELECT * FROM board WHERE is_del='N' AND title LIKE "%test%" 
+		SELECT * FROM board WHERE is_del='N' AND (title LIKE "%test%" or writer LIKE "%test%")
+		SELECT * FROM board WHERE is_del='N' AND (title LIKE "%test%" or writer LIKE "%test%" or content LIKE "%test%")
+	 -->
+	 
+	<sql id="search">
+	    <if test="type != null">
+			<trim prefix="and (" suffix=")" suffixOverrides="or">
+				<foreach collection="typeToArray" item="type">
+					<trim suffix="or">
+						<choose>
+							<when test="type == 't'.toString()">
+								title Like CONCAT('%', #{keyword}, '%')
+							</when>
+							<when test="type == 'w'.toString()">
+								writer Like CONCAT('%', #{keyword}, '%')
+							</when>
+							<when test="type == 'c'.toString()">
+								content Like CONCAT('%', #{keyword}, '%')
+							</when>
+						</choose>
+					</trim>
+				</foreach>
+			</trim>         
+	    </if>
+	</sql>
 </mapper>

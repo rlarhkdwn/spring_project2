@@ -7,4 +7,4 @@
 	<div class=".container-sm p-5">
 
 	</div>
-<jsp:include page="../layout/header.jsp" />
+<jsp:include page="../layout/footer.jsp" />

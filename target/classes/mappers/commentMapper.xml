@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koreait.www.repository.CommentDAO">
+	<insert id="post">
+		INSERT INTO comment(bno, writer, content) VALUES(#{bno}, #{writer}, #{content})
+	</insert>
+	
+	<select id="getList" resultType="com.koreait.www.domain.CommentVO">
+		SELECT * FROM comment WHERE bno=#{bno} ORDER BY cno DESC LIMIT #{pgvo.pageStart}, #{pgvo.qty}
+	</select>
+	
+	<select id="getTotal" resultType="int">
+		SELECT COUNT(cno) FROM comment WHERE bno=#{bno}
+	</select>
+	
+	<update id="update">
+		UPDATE comment SET content=#{content} WHERE cno=#{cno}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM comment WHERE cno=#{cno}
+	</delete>
+</mapper>

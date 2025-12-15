@@ -30,3 +30,83 @@ CREATE TABLE board(
 	
 	PRIMARY KEY(bno)
 );
+
+
+-- 251208
+-- 댓글 테이블 생성
+CREATE TABLE comment (
+	cno BIGINT AUTO_INCREMENT,
+	bno BIGINT NOT NULL,
+	writer VARCHAR(200) NOT NULL,
+	content TEXT,
+	reg_date DATETIME DEFAULT NOW(),
+	
+	PRIMARY KEY(cno)
+);
+
+
+-- 251209
+-- board 댓글 개수를 집계하는 칼럼을 추가
+ALTER TABLE board ADD cmt_qty INT DEFAULT 0;
+
+-- 현재 들어간 댓글 개수 집계
+UPDATE board b
+LEFT JOIN (
+    SELECT bno, COUNT(*) AS cnt
+    FROM comment
+    GROUP BY bno
+) c ON b.bno = c.bno
+SET b.cmt_qty = IFNULL(c.cnt, 0);
+
+
+-- 251210
+-- file 테이블 생성
+CREATE TABLE file(
+	uuid VARCHAR(256) NOT NULL,
+	save_dir VARCHAR(256) NOT NULL,
+	file_name VARCHAR(256) NOT NULL,
+	file_type TINYINT(1) DEFAULT 0,
+	bno BIGINT NOT NULL,
+	file_size BIGINT,
+	reg_date DATETIME DEFAULT NOW(),
+	
+	PRIMARY KEY(uuid)
+);
+
+
+-- 251211
+-- board 테이블에 파일의 개수를 집게하는 칼럼을 추가
+ALTER TABLE board ADD file_qty INT DEFAULT 0;
+
+-- 현재 들어가있는 파일의 개수 집계
+UPDATE board b
+LEFT JOIN (
+    SELECT bno, COUNT(*) AS cnt
+    FROM file
+    GROUP BY bno
+) c ON b.bno = c.bno
+SET b.file_qty = IFNULL(c.cnt, 0);
+
+
+-- user 테이블 생성
+CREATE TABLE user(
+	email VARCHAR(256),
+	pwd VARCHAR(256) NOT NULL,
+	nick_name VARCHAR(200),
+	reg_date DATETIME DEFAULT NOW(),
+	last_login DATETIME DEFAULT NOW(),
+	
+	PRIMARY KEY(email)
+);
+
+
+-- 권한 테이블 생성
+-- ADMIN + USER + MANAGER
+-- ROLE_ADMIN / ROLE_USER / ROLE_MANAGER
+CREATE TABLE auth(
+	id BIGINT AUTO_INCREMENT,
+	email VARCHAR(256) NOT NULL,
+	auth VARCHAR(256) NOT NULL,
+	
+	PRIMARY KEY(id)
+);

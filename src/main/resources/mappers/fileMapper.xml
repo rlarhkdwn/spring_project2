@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.koreait.www.repository.FileDAO">
+	<insert id="insertFile">
+		INSERT INTO file(uuid, save_dir, file_name, file_type, bno, file_size) 
+		VALUES(#{uuid}, #{saveDir}, #{fileName}, #{fileType}, #{bno}, #{fileSize})
+	</insert>
+	
+	<select id="getList" resultType="com.koreait.www.domain.FileVO">
+		SELECT * FROM file WHERE bno=#{bno}
+	</select>
+	
+	<select id="getBno" resultType="int">
+		SELECT bno FROM file WHERE uuid=#{uuid}
+	</select>
+	
+	<select id="getTodayFileList" resultType="com.koreait.www.domain.FileVO">
+		SELECT * FROM file WHERE save_dir=#{today}
+	</select>
+	
+	<delete id="removeFile">
+		DELETE FROM file WHERE uuid=#{uuid}
+	</delete>
+	
+	<delete id="removeFileByBno">
+		DELETE FROM file WHERE bno=#{bno}
+	</delete>
+</mapper>

@@ -120,4 +120,22 @@ public class BoardServiceImpl implements BoardService {
 		return isOk; 
 	}
 
+	@Override
+	public List<BoardVO> getNoticeList() {
+		// TODO Auto-generated method stub
+		return bdao.getNoticeList();
+	}
+	
+	@Override
+	public Long getPrevBno(long bno) {
+		// TODO Auto-generated method stub
+		return bdao.getPrevBno(bno);
+	}
+
+	@Override
+	public Long getNextBno(long bno) {
+		// TODO Auto-generated method stub
+		return bdao.getNextBno(bno);
+	}
+
 }

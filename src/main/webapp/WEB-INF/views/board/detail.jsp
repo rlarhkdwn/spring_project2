@@ -9,7 +9,26 @@
 		
 		<!-- c:set 값을 저장하는 변수처럼 사용 -->
 		<c:set value="${boardFileDTO.board}" var="board" />
+		<c:set value="${prevBoardBno}" var="prev" />
+		<c:set value="${nextBoardBno}" var="next" />
 		<%-- <c:set value="${boardFileDTO.flist}" var="flist" /> --%>
+
+		<c:if test="${board.type eq 'normal'}">
+			<div class="d-flex justify-content-between">
+			    <a class="d-flex align-items-center gap-1 ${prev gt 0 ? '' : 'text-muted pe-none'}" href="/board/detail?bno=${prev gt 0 ? prev : '#'}">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
+			             <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1"/>
+			        </svg>
+			        <span>이전글</span>
+			    </a>
+			    <a class="d-flex align-items-center gap-1 ${next gt 0 ? '' : 'text-muted pe-none'}" href="/board/detail?bno=${next gt 0 ? next : '#'}">
+			        <span>다음글</span>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square-fill" viewBox="0 0 16 16">
+			            <path d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1"/>
+			        </svg>
+			    </a>
+			</div>
+		</c:if>
 		
 		<div class="mb-3">
 			<label for="b" class="form-label">Bno</label>
@@ -70,8 +89,8 @@
 		
 		<a href="/board/list"><button type="button" class="btn btn-primary">list</button></a>
 		<sec:authorize access="isAuthenticated()">
-			<sec:authentication property="principal.userVO.nickName" var="authNick"/>
-			<c:if test="${board.writer eq authNick}">
+			<sec:authentication property="principal.userVO" var="uvo"/>
+			<c:if test="${board.writer eq uvo.nickName or uvo.authList.stream().anyMatch(authVO -> authVO.auth.equals('ROLE_ADMIN')).get()}">
 				<a href="/board/modify?bno=${board.bno}"><button type="button" class="btn btn-warning">modify</button></a>
 				<a href="/board/delete?bno=${board.bno}"><button type="button" class="btn btn-danger">delete</button></a>
 			</c:if>

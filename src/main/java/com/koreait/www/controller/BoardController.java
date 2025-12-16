@@ -70,9 +70,11 @@ public class BoardController {
 	@GetMapping("/list")
 	public String list(Model model, PagingVO pgvo) {
 		log.info(">>> pgvo " + pgvo);
+		List <BoardVO> noticeList = bsv.getNoticeList();
 		List <BoardVO> list = bsv.getList(pgvo);
 		int totalCount = bsv.getTotalCount(pgvo);
 		PagingHandler ph = new PagingHandler(totalCount, pgvo);
+		model.addAttribute("noticeList", noticeList);
 		model.addAttribute("list", list);
 		model.addAttribute("ph", ph);
 		log.info(">>> list " + list);
@@ -87,9 +89,14 @@ public class BoardController {
 			// readCount 1증가
 			int isOk = bsv.addReadCount(bno, 1);
 		}
+		Long prev = bsv.getPrevBno(bno);
+		long prevBoardBno = (prev != null) ? prev : 0L;
 		BoardFileDTO boardFileDTO = bsv.getDetail(bno);
-		
+		Long next = bsv.getNextBno(bno);
+		long nextBoardBno = (next != null) ? next : 0L;
+		model.addAttribute("prevBoardBno", prevBoardBno);
 		model.addAttribute("boardFileDTO", boardFileDTO);
+		model.addAttribute("nextBoardBno", nextBoardBno);
 	}
 	
 	@PostMapping("/update")
@@ -125,4 +132,7 @@ public class BoardController {
 		}
 		return isOk > 0 ? "1" : "0";
 	}
+	
+	@GetMapping("/notice")
+	public void notice() {}
 }

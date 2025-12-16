@@ -110,3 +110,10 @@ CREATE TABLE auth(
 	
 	PRIMARY KEY(id)
 );
+
+
+-- 251216
+-- board 테이블 type 컬럼 추가(일반글, 공지사항 구분용)
+ALTER TABLE board ADD type VARCHAR(256) DEFAULT 'normal';
+
+

@@ -58,6 +58,10 @@
 		        	<c:if test="${pri.userVO.authList.stream().anyMatch(authVO -> authVO.auth.equals('ROLE_ADMIN')).get()}">
 			        	<li class="nav-item">
 			        		<a class="nav-link" href="/user/list">UserList(ADMIN)</a>
+			        	</li>
+		        		<!-- 공지사항 쓰기 -->
+			        	<li class="nav-item">
+			        		<a class="nav-link" href="/board/notice">Notice(ADMIN)</a>
 			        	</li>		        		
 		        	</c:if>
 		        </sec:authorize>

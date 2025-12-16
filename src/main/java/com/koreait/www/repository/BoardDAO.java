@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.koreait.www.domain.BoardFileDTO;
 import com.koreait.www.domain.BoardVO;
 import com.koreait.www.domain.PagingVO;
 
@@ -29,5 +30,11 @@ public interface BoardDAO {
 	long getBno();
 
 	int updateFileQty(@Param("bno") long bno, @Param("i") int i);
+
+	List<BoardVO> getNoticeList();
+	
+	Long getPrevBno(long bno);
+
+	Long getNextBno(long bno);
 
 }

@@ -13,15 +13,18 @@
 				<label for="e" class="form-label">Email</label>
 				<input type="text" class="form-control" id="e" name="email" placeholder="id@example.com">
 			</div>
+			<div id="emailValidResult"></div>
 			<div class="mb-3">
 				<label for="p" class="form-label">Password</label>
-				<input type="password" class="form-control" id="p" name="pwd" placeholder="password...">
+				<input type="password" class="form-control" id="p" name="pwd" placeholder="영어, 숫자, 특수문자 1개 이상 포함하여 8~20자">
 			</div>
+			<div id="passwordValidResult"></div>
 			<div class="mb-3">
 				<label for="n" class="form-label">NickName</label>
 				<input type="text" class="form-control" id="n" name="nickName" placeholder="nickname...">
 			</div>
-			<button type="submit" class="btn btn-primary">Join</button>
+			<button type="submit" class="btn btn-primary" id="submit" disabled>Join</button>
 		</form>
 	</div>
+	<script type="text/javascript" src="/resources/js/userRegister.js"></script>
 <jsp:include page="../layout/footer.jsp" />

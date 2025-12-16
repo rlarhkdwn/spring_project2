@@ -27,7 +27,7 @@ public class FileHandler {
 		List<FileVO> flist = new ArrayList<FileVO>();
 		
 		// FileVO 생성 + 파일 저장 + 이미지 파일일 경우 썸네일 저장
-		// 일반적으로 파일 저장시 날짜별로 포더화 하여 업로드된 파일 관리
+		// 일반적으로 파일 저장시 날짜별로 폴더화 하여 업로드된 파일 관리
 		// 2025-12-10 => 2025/12/10
 		LocalDate date = LocalDate.now();
 		log.info(">> date " + date);
@@ -92,10 +92,11 @@ public class FileHandler {
 			return isOkFile * isOkThFile;			
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return 0;
 	}
-	
+
 	private boolean isImageFile(File storeFile) throws IOException {
 		String mimeType = new Tika().detect(storeFile);
 		// type "image/png" "image/jpeg"

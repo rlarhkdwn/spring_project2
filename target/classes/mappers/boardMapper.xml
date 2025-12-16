@@ -6,31 +6,44 @@
 <mapper namespace="com.koreait.www.repository.BoardDAO">
 <!-- namespace = dao interface의 이름 id = 메서드명 -->
 	<insert id="insert">
-		INSERT INTO board(title, writer, content) VALUES(#{title}, #{writer}, #{content})
+		INSERT INTO board(title, writer, content, type) VALUES(#{title}, #{writer}, #{content}, #{type})
 	</insert>
 	
 	<select id="getList" resultType="com.koreait.www.domain.BoardVO">
 		<!-- SELECT * FROM board WHERE is_del='N' ORDER BY bno DESC LIMIT #{pageStart}, #{qty} -->
-		SELECT a.bno, b.title, b.writer, b.reg_date, b.read_count, b.cmt_qty, b.file_qty
+		SELECT a.bno, b.title, b.writer, b.reg_date, b.read_count, b.cmt_qty, b.file_qty, b.type
 		FROM (
-			SELECT bno FROM board WHERE is_del='N'
+			SELECT bno FROM board WHERE is_del='N' AND type='normal'
 			<include refid="search"></include>
 			ORDER BY bno DESC
 			LIMIT #{pageStart}, #{qty}
 		) a LEFT JOIN board b ON a.bno = b.bno
 	</select>
 	
+	<select id="getNoticeList" resultType="com.koreait.www.domain.BoardVO">
+		<!-- SELECT * FROM board WHERE is_del='N' ORDER BY bno DESC LIMIT #{pageStart}, #{qty} -->
+		SELECT * FROM board WHERE is_del='N' AND type='notice' ORDER BY bno
+	</select>
+	
 	<select id="getDetail" resultType="com.koreait.www.domain.BoardVO">
 		SELECT * FROM board WHERE is_del='N' AND bno=#{bno}
 	</select>
+	
+	<select id="getPrevBno" resultType="java.lang.Long">
+		SELECT bno FROM board WHERE bno &lt; #{bno} AND is_del = 'N' AND type='normal' ORDER BY bno DESC LIMIT 1
+	</select>
+	
+	<select id="getNextBno" resultType="java.lang.Long">
+		SELECT bno FROM board WHERE bno &gt; #{bno} AND is_del = 'N' AND type='normal' ORDER BY bno LIMIT 1
+	</select>
 		
 	<select id="getTotalCount" resultType="int">
-		SELECT count(bno) FROM board WHERE is_del='N'
+		SELECT count(bno) FROM board WHERE is_del='N' AND type='normal'
 		<include refid="search"></include>
 	</select>
 	
 	<select id="getBno" resultType="long">
-		SELECT max(bno) FROM board 
+		SELECT max(bno) FROM board
 	</select>
 	
 	<update id="update">
